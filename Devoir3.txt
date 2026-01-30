@@ -1,0 +1,3 @@
+-documentation du MOTIONTOUCH et onTouch
+-Changer le cercle en rectangle en triangle
+-initialiser le projet de groupe: une seule activité qui affiche le taquin à 9 cases
