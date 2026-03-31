@@ -1,7 +1,0 @@
-Devoir de maison:
-
--Définir une matrice de départ et une matrice d'arrivée
--Afficher toutes les distances des possibilités par rapport à la configuration d'arrivée
-
-+ Préparation Daily meeting projet tutoré
-
