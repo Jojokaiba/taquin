@@ -1,0 +1,137 @@
+package com.jojo.mygroupapplication.data;
+
+import java.util.*;
+
+public class Matrice {
+
+    private int size;
+    private int[][] donnees;
+    private String stringHashCode;
+
+    public Matrice(int size) {
+        this.size = size;
+        this.donnees = new int[size][size];
+    }
+
+
+    public int getSize() {
+        return size;
+    }
+
+    private String computeHashCode() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                sb.append(donnees[i][j]).append(",");
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return stringHashCode != null ? stringHashCode.hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Matrice)) return false;
+        Matrice m = (Matrice) o;
+        if (this.size != m.size) return false;
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (this.donnees[i][j] != m.donnees[i][j]) return false;
+            }
+        }
+        return true;
+    }
+
+
+    public void setValeur(int[][] values) {
+        for (int i = 0; i < size; i++) {
+            System.arraycopy(values[i], 0, donnees[i], 0, size);
+        }
+        stringHashCode = computeHashCode();
+    }
+
+    public int getValeur(int ligne, int col) {
+        return donnees[ligne][col];
+    }
+
+
+    public void afficher() {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                System.out.print(donnees[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+
+    public int[] trouverElement(int element) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (donnees[i][j] == element) return new int[]{i, j};
+            }
+        }
+        return null;
+    }
+
+
+    public double distance(Matrice targetMatrice) {
+        double distanceTotale = 0;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                int valeur = donnees[i][j];
+                int[] targetCoord = targetMatrice.trouverElement(valeur);
+
+                distanceTotale += Math.abs(i - targetCoord[0])
+                        + Math.abs(j - targetCoord[1]);
+            }
+        }
+        return distanceTotale;
+    }
+
+
+    public List<Matrice> getPossibilites() {
+        List<Matrice> possibilites = new ArrayList<>();
+
+        int[] posVide = trouverElement(0);
+        int ligne = posVide[0];
+        int col = posVide[1];
+
+        int[][] directions = {
+                {-1, 0}, {1, 0}, {0, -1}, {0, 1}
+        };
+
+        for (int[] dir : directions) {
+            int newL = ligne + dir[0];
+            int newC = col + dir[1];
+
+            if (newL >= 0 && newL < size && newC >= 0 && newC < size) {
+
+                int[][] copie = copierMatrice();
+
+                copie[ligne][col] = copie[newL][newC];
+                copie[newL][newC] = 0;
+
+                Matrice nouvelle = new Matrice(size);
+                nouvelle.setValeur(copie);
+
+                possibilites.add(nouvelle);
+            }
+        }
+
+        return possibilites;
+    }
+
+    public int[][] copierMatrice() {
+        int[][] copie = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            System.arraycopy(donnees[i], 0, copie[i], 0, size);
+        }
+        return copie;
+    }
+}

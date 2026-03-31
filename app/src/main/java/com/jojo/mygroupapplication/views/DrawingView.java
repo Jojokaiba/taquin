@@ -12,6 +12,9 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.jojo.mygroupapplication.data.Matrice;
+import com.jojo.mygroupapplication.resolver.TaquinResolver;
+
 import java.util.jar.Attributes;
 
 public class DrawingView extends View {
@@ -21,6 +24,25 @@ public class DrawingView extends View {
     private Paint textPaint;
 
 
+    Matrice depart = new Matrice(3);
+    Matrice cible = new Matrice(3);
+    Matrice current = new Matrice(3);;
+
+    public void initMatrix() {
+        depart.setValeur(new int[][]{
+                {1, 2, 4},
+                {3, 7, 6},
+                {0, 8, 5}
+        });
+
+        cible.setValeur(new int[][]{
+                {1, 2, 3},
+                {8, 0, 4},
+                {7, 6, 5}
+        });
+
+        current.setValeur(depart.copierMatrice());
+    }
 
 
     public DrawingView(Context context) {
@@ -50,38 +72,36 @@ public class DrawingView extends View {
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(60);
         textPaint.setAntiAlias(true);
+        initMatrix();
     }
 
     @Override
     protected  void onDraw(Canvas drawingCanvas){
         super.onDraw(drawingCanvas);
-        // int radius = 200;
-        // drawingCanvas.drawCircle(posX, posY, radius, drawingPaint);
+        drawMatrix(drawingCanvas);
+
+    }
+
+
+    public void setCurrent( Matrice newConfig ) {
+        current.setValeur(newConfig.copierMatrice());
+        invalidate();
+    }
+    public void drawMatrix(Canvas drawingCanvas) {
+
         float currentPositionX = getWidth() / 6;
         float currentPositionY = getHeight() / 2 ;
         int compteur = 1;
         Rect carre =  new Rect(200,200,200,200);
-        for (int i=1; i<4 ; i++){
-            for (int j=1; j<4 ; j++){
+        for (int i=0 ; i< current.getSize() ; i++){
+            for (int j=0 ; j < current.getSize() ; j++){
 
-                /* drawingCanvas.drawLine(currentPositionX, currentPositionY , currentPositionX + 200, currentPositionY, drawingPaint);  //premier côté du carré
-                currentPositionX += 200;
 
-                drawingCanvas.drawLine(currentPositionX, currentPositionY , currentPositionX, currentPositionY + 200, drawingPaint); // deuxième côté du carré
-                currentPositionY += 200;
-
-                drawingCanvas.drawLine(currentPositionX, currentPositionY , currentPositionX - 200, currentPositionY, drawingPaint);
-                currentPositionX -= 200;
-
-                drawingCanvas.drawLine(currentPositionX, currentPositionY , currentPositionX, currentPositionY - 200, drawingPaint);
-                currentPositionY -= 200;
-
-                 */
 
                 drawingCanvas.drawRect(currentPositionX,currentPositionY,currentPositionX+200 , currentPositionY+200, drawingPaint);
 
-                if(compteur <= 8){
-                    drawingCanvas.drawText(String.valueOf(compteur),currentPositionX+90 , currentPositionY+120, textPaint);
+                if(current.getValeur(i , j) != 0){
+                    drawingCanvas.drawText(String.valueOf(current.getValeur(i , j)),currentPositionX+90 , currentPositionY+120, textPaint);
                 }
                 compteur += 1;
 
@@ -91,17 +111,20 @@ public class DrawingView extends View {
 
 
             currentPositionX = getWidth() / 6;
-            currentPositionY -= 200 ;
+            currentPositionY += 200 ;
 
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                TaquinResolver.resolve(depart, cible, this);
+                break;
 
-        posX = event.getX(); // position X dans la View
-        posY = event.getY(); //position Y dans la View
-        invalidate();
+            default:
+        }
         return true;
 
     }
