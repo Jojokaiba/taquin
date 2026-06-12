@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MyGroupApplication</string>
+    <string name="titre_taquin">TAQUIN MASTER</string>
+    <string name="r_solution_auto">Résolution Auto</string>
+    <string name="nouvelle_partie">Nouvelle Partie</string>
+    <string name="statistiques">Statistiques</string>
+    <string name="quitter">Quitter</string>
 </resources>

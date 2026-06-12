@@ -83,7 +83,7 @@ public class TaquinResolver {
 
     public static void resolve(Matrice depart, Matrice cible, DrawingView drawingView) {
 
-        // Lancer le calcul dans un thread séparé
+        // On lance le calcul dans un thread séparé
         new Thread(() -> {
 
             Set<Matrice> visitees = new HashSet<>();
